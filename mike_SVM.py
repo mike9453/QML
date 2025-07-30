@@ -47,3 +47,20 @@ plt.ylabel('Drug Type')
 plt.xlabel('Total')
 plt.savefig('drug_distribution.png', dpi=150, bbox_inches='tight')
 plt.close()
+
+
+#SVM
+
+from sklearn.svm import SVC
+SVCclassifier = SVC(kernel='linear', max_iter=251)
+SVCclassifier.fit(X_train, y_train)
+
+y_pred = SVCclassifier.predict(X_test)
+
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
+
+from sklearn.metrics import accuracy_score
+SVCAcc = accuracy_score(y_pred,y_test)
+print('SVC accuracy is: {:.2f}%'.format(SVCAcc*100))
+

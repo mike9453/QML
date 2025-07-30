@@ -17,17 +17,16 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # 使用最新版本的 Qiskit 導入方式
-from qiskit import QuantumCircuit
 from qiskit_aer import AerSimulator
 from qiskit.primitives import Sampler
 from qiskit.circuit.library import ZZFeatureMap, RealAmplitudes
-from qiskit_algorithms.optimizers import COBYLA, SPSA
+from qiskit_algorithms.optimizers import COBYLA
 from qiskit_machine_learning.algorithms import VQC
 from qiskit_machine_learning.kernels import FidelityQuantumKernel
 from qiskit_machine_learning.algorithms import QSVC
 
-print("🚀 載入真正的量子機器學習套件...")
-print("📦 使用 Qiskit 量子計算框架")
+print("🚀 Loading true quantum machine learning packages...")
+print("📦 Using Qiskit quantum computing framework")
 
 class TrueQuantumSVM:
     """
@@ -51,10 +50,10 @@ class TrueQuantumSVM:
         self.scaler = StandardScaler()
         self.label_encoder = LabelEncoder()
         
-        print(f"⚛️  初始化量子參數:")
-        print(f"   🔹 量子比特數: {feature_dimension}")
-        print(f"   🔹 電路深度: {reps}")
-        print(f"   🔹 測量次數: {shots}")
+        print(f"⚛️  Initializing quantum parameters:")
+        print(f"   🔹 Number of qubits: {feature_dimension}")
+        print(f"   🔹 Circuit depth: {reps}")
+        print(f"   🔹 Number of shots: {shots}")
         
         self._setup_quantum_circuits()
         self._setup_quantum_kernel()
@@ -62,7 +61,7 @@ class TrueQuantumSVM:
     
     def _setup_quantum_circuits(self):
         """設置量子電路"""
-        print("🔧 建構量子特徵映射電路...")
+        print("🔧 Building quantum feature mapping circuit...")
         
         # 創建量子特徵映射 - 使用 ZZ 特徵映射
         self.feature_map = ZZFeatureMap(
@@ -70,7 +69,7 @@ class TrueQuantumSVM:
             reps=self.reps,
             entanglement='full'  # 全連接糾纏
         )
-        print(f"   ✅ ZZ特徵映射電路已建立 (深度: {self.feature_map.depth()})")
+        print(f"   ✅ ZZ feature mapping circuit established (depth: {self.feature_map.depth()})")
         
         # 創建變分電路
         self.ansatz = RealAmplitudes(
@@ -78,11 +77,11 @@ class TrueQuantumSVM:
             reps=self.reps,
             entanglement='full'
         )
-        print(f"   ✅ 變分電路已建立 (參數數量: {self.ansatz.num_parameters})")
+        print(f"   ✅ Variational circuit established (parameters: {self.ansatz.num_parameters})")
     
     def _setup_quantum_kernel(self):
         """設置量子核函數"""
-        print("🧮 建構量子核函數...")
+        print("🧮 Building quantum kernel functions...")
         
         # 使用 AerSimulator 進行量子模擬
         self.quantum_instance = AerSimulator(shots=self.shots)
@@ -91,11 +90,11 @@ class TrueQuantumSVM:
         self.quantum_kernel = FidelityQuantumKernel(
             feature_map=self.feature_map
         )
-        print("   ✅ 保真度量子核已建立")
+        print("   ✅ Fidelity quantum kernel established")
     
     def _setup_quantum_classifier(self):
         """設置量子分類器"""
-        print("🎯 建構量子支援向量機...")
+        print("🎯 Building quantum support vector machine...")
         
         # 創建量子SVM
         self.qsvm = QSVC(quantum_kernel=self.quantum_kernel)
@@ -113,7 +112,7 @@ class TrueQuantumSVM:
             sampler=sampler  # 新版使用 sampler 而不是 quantum_instance
         )
         
-        print("   ✅ 量子SVM和VQC分類器已建立")
+        print("   ✅ Quantum SVM and VQC classifiers established")
         
         # 預設使用 QSVM
         self.model = self.qsvm
@@ -123,28 +122,28 @@ class TrueQuantumSVM:
         """切換到變分量子分類器"""
         self.model = self.vqc
         self.model_type = "VQC"
-        print("🔄 已切換到變分量子分類器 (VQC)")
+        print("🔄 Switched to Variational Quantum Classifier (VQC)")
     
     def use_qsvm(self):
         """切換到量子SVM"""
         self.model = self.qsvm
         self.model_type = "QSVM"
-        print("🔄 已切換到量子支援向量機 (QSVM)")
+        print("🔄 Switched to Quantum Support Vector Machine (QSVM)")
     
     def fit(self, X, y):
         """
         訓練量子模型
         """
-        print(f"\n📊 開始量子機器學習訓練 ({self.model_type})...")
+        print(f"\n📊 Starting quantum machine learning training ({self.model_type})...")
         
         # 特徵標準化
         X_scaled = self.scaler.fit_transform(X)
-        print(f"   🔹 特徵已標準化: {X_scaled.shape}")
+        print(f"   🔹 Features standardized: {X_scaled.shape}")
         
         # 標籤編碼
         y_encoded = self.label_encoder.fit_transform(y)
         unique_labels = len(np.unique(y_encoded))
-        print(f"   🔹 標籤已編碼: {unique_labels} 個類別")
+        print(f"   🔹 Labels encoded: {unique_labels} classes")
         
         # 確保特徵維度匹配量子電路
         if X_scaled.shape[1] > self.feature_dimension:
@@ -153,20 +152,20 @@ class TrueQuantumSVM:
             pca = PCA(n_components=self.feature_dimension)
             X_scaled = pca.fit_transform(X_scaled)
             self.pca = pca
-            print(f"   🔹 PCA降維至 {self.feature_dimension} 維")
+            print(f"   🔹 PCA reduced to {self.feature_dimension} dimensions")
         elif X_scaled.shape[1] < self.feature_dimension:
             # 如果特徵太少，補零
             padding = np.zeros((X_scaled.shape[0], self.feature_dimension - X_scaled.shape[1]))
             X_scaled = np.concatenate([X_scaled, padding], axis=1)
-            print(f"   🔹 特徵填充至 {self.feature_dimension} 維")
+            print(f"   🔹 Features padded to {self.feature_dimension} dimensions")
         
         # 量子訓練
-        print("⚛️  執行量子訓練...")
-        print("   (這可能需要幾分鐘時間，請耐心等待)")
+        print("⚛️  Executing quantum training...")
+        print("   (This may take several minutes, please be patient)")
         
         self.model.fit(X_scaled, y_encoded)
         
-        print("✅ 量子模型訓練完成！")
+        print("✅ Quantum model training completed!")
         return self
     
     def predict(self, X):
@@ -180,10 +179,10 @@ class TrueQuantumSVM:
             padding = np.zeros((X_scaled.shape[0], self.feature_dimension - X_scaled.shape[1]))
             X_scaled = np.concatenate([X_scaled, padding], axis=1)
         
-        print("🔮 執行量子預測...")
+        print("🔮 Executing quantum prediction...")
         y_pred_encoded = self.model.predict(X_scaled)
         predictions = self.label_encoder.inverse_transform(y_pred_encoded)
-        print("✅ 量子預測完成")
+        print("✅ Quantum prediction completed")
         
         return predictions
     
@@ -201,11 +200,11 @@ class TrueQuantumSVM:
 
 def load_and_prepare_quantum_data():
     """載入並準備量子資料"""
-    print("📁 載入藥物分類資料集...")
+    print("📁 Loading drug classification dataset...")
     
     df = pd.read_csv('drug200.csv')
-    print(f"📊 資料集大小: {df.shape}")
-    print(f"🏷️  藥物類別: {df['Drug'].unique()}")
+    print(f"📊 Dataset size: {df.shape}")
+    print(f"🏷️  Drug categories: {df['Drug'].unique()}")
     
     # 特徵工程 - 針對量子計算優化
     le_sex = LabelEncoder()
@@ -221,9 +220,9 @@ def load_and_prepare_quantum_data():
     X = df[features].values
     y = df['Drug'].values
     
-    print("✅ 量子資料準備完成")
-    print(f"   🔹 特徵矩陣: {X.shape}")
-    print(f"   🔹 目標向量: {y.shape}")
+    print("✅ Quantum data preparation completed")
+    print(f"   🔹 Feature matrix: {X.shape}")
+    print(f"   🔹 Target vector: {y.shape}")
     
     return X, y, df
 
@@ -231,19 +230,19 @@ def quantum_visualization(df, y_test, y_pred, accuracy, circuit_info):
     """量子結果視覺化 - 修復版本"""
     plt.style.use('default')  # 使用預設樣式避免seaborn版本問題
     fig, axes = plt.subplots(2, 3, figsize=(20, 12))
-    fig.suptitle('🚀 真正量子SVM藥物分類結果', fontsize=18, fontweight='bold')
+    fig.suptitle('🚀 True Quantum SVM Drug Classification Results', fontsize=18, fontweight='bold')
     
     # 1. 量子電路資訊
     circuit_data = list(circuit_info.values())
-    circuit_labels = ['特徵映射深度', '特徵映射閘數', '變分電路深度', 
-                     '可訓練參數', '量子比特數', '測量次數']
+    circuit_labels = ['Feature map depth', 'Feature map gates', 'Variational circuit depth', 
+                     'Trainable parameters', 'Number of qubits', 'Number of shots']
     
     colors = plt.cm.viridis(np.linspace(0, 1, len(circuit_data)))
     bars = axes[0,0].bar(range(len(circuit_data)), circuit_data, color=colors)
-    axes[0,0].set_title('⚛️ 量子電路架構參數')
+    axes[0,0].set_title('⚛️ Quantum Circuit Architecture Parameters')
     axes[0,0].set_xticks(range(len(circuit_labels)))
     axes[0,0].set_xticklabels(circuit_labels, rotation=45, ha='right')
-    axes[0,0].set_ylabel('數值')
+    axes[0,0].set_ylabel('Value')
     
     # 添加數值標籤
     for bar, value in zip(bars, circuit_data):
@@ -256,21 +255,21 @@ def quantum_visualization(df, y_test, y_pred, accuracy, circuit_info):
     colors = plt.cm.Set3(np.linspace(0, 1, len(drug_counts)))
     axes[0,1].pie(drug_counts.values, labels=drug_counts.index, autopct='%1.1f%%', 
                   colors=colors, startangle=90)
-    axes[0,1].set_title('💊 藥物類型分布')
+    axes[0,1].set_title('💊 Drug Type Distribution')
     
     # 3. 特徵關係 - 量子特徵空間
     scatter = axes[0,2].scatter(df['Age'], df['Na_to_K'], 
                                c=pd.Categorical(df['Drug']).codes, 
                                cmap='viridis', alpha=0.7, s=60)
-    axes[0,2].set_title('🌌 量子特徵空間映射')
-    axes[0,2].set_xlabel('年齡')
-    axes[0,2].set_ylabel('鈉鉀比例')
+    axes[0,2].set_title('🌌 Quantum Feature Space Mapping')
+    axes[0,2].set_xlabel('Age')
+    axes[0,2].set_ylabel('Na/K Ratio')
     plt.colorbar(scatter, ax=axes[0,2])
     
     # 4. 量子預測混淆矩陣 - 使用 matplotlib 直接繪製
     cm = confusion_matrix(y_test, y_pred)
     im = axes[1,0].imshow(cm, interpolation='nearest', cmap='Blues')
-    axes[1,0].set_title(f'⚛️ 量子預測混淆矩陣\n準確率: {accuracy:.4f}')
+    axes[1,0].set_title(f'⚛️ Quantum Prediction Confusion Matrix\nAccuracy: {accuracy:.4f}')
     
     # 添加文字標籤
     thresh = cm.max() / 2.
@@ -286,26 +285,26 @@ def quantum_visualization(df, y_test, y_pred, accuracy, circuit_info):
     axes[1,0].set_yticks(range(len(unique_labels)))
     axes[1,0].set_xticklabels(unique_labels)
     axes[1,0].set_yticklabels(unique_labels)
-    axes[1,0].set_xlabel('量子預測標籤')
-    axes[1,0].set_ylabel('真實標籤')
+    axes[1,0].set_xlabel('Quantum Predicted Labels')
+    axes[1,0].set_ylabel('True Labels')
     plt.colorbar(im, ax=axes[1,0])
     
     # 5. 準確率展示
-    axes[1,1].bar(['量子SVM'], [accuracy], color='#FF6B6B', alpha=0.8, width=0.5)
-    axes[1,1].set_title('🎯 量子分類準確率')
-    axes[1,1].set_ylabel('準確率')
+    axes[1,1].bar(['Quantum SVM'], [accuracy], color='#FF6B6B', alpha=0.8, width=0.5)
+    axes[1,1].set_title('🎯 Quantum Classification Accuracy')
+    axes[1,1].set_ylabel('Accuracy')
     axes[1,1].set_ylim(0, 1)
     axes[1,1].text(0, accuracy + 0.02, f'{accuracy:.4f}', 
                    ha='center', va='bottom', fontsize=14, fontweight='bold')
     
     # 6. 量子優勢分析
-    quantum_advantages = ['量子平行性', '量子糾纏', '高維映射', '非線性核', '量子干涉']
+    quantum_advantages = ['Quantum Parallelism', 'Quantum Entanglement', 'High-Dim Mapping', 'Nonlinear Kernel', 'Quantum Interference']
     advantage_scores = [0.9, 0.85, 0.95, 0.8, 0.75]
     
     bars = axes[1,2].barh(quantum_advantages, advantage_scores, 
                           color=plt.cm.plasma(np.linspace(0, 1, len(advantage_scores))))
-    axes[1,2].set_title('🚀 量子計算優勢分析')
-    axes[1,2].set_xlabel('優勢指數')
+    axes[1,2].set_title('🚀 Quantum Computing Advantage Analysis')
+    axes[1,2].set_xlabel('Advantage Index')
     axes[1,2].set_xlim(0, 1)
     
     # 添加分數標籤
@@ -319,9 +318,9 @@ def quantum_visualization(df, y_test, y_pred, accuracy, circuit_info):
 
 def main():
     """主執行函數 - 純量子機器學習流程"""
-    print("🎯 真正量子SVM藥物分類專案啟動")
+    print("🎯 True Quantum SVM Drug Classification Project Started")
     print("=" * 60)
-    print("⚛️  使用純量子計算 - 無模擬降級機制")
+    print("⚛️  Using pure quantum computing - no simulation degradation mechanisms")
     print("=" * 60)
     
     # 載入資料
@@ -332,12 +331,12 @@ def main():
         X, y, test_size=0.3, random_state=42, stratify=y
     )
     
-    print(f"\n📊 量子資料集劃分:")
-    print(f"   🔹 訓練集: {len(X_train)} 樣本")
-    print(f"   🔹 測試集: {len(X_test)} 樣本")
+    print(f"\n📊 Quantum dataset split:")
+    print(f"   🔹 Training set: {len(X_train)} samples")
+    print(f"   🔹 Test set: {len(X_test)} samples")
     
     # 初始化真正的量子SVM
-    print(f"\n⚛️  初始化真正量子SVM...")
+    print(f"\n⚛️  Initializing true quantum SVM...")
     quantum_svm = TrueQuantumSVM(
         feature_dimension=4,  # 4個量子比特
         reps=3,              # 3層量子電路
@@ -346,16 +345,16 @@ def main():
     
     # 顯示量子電路資訊
     circuit_info = quantum_svm.get_quantum_circuit_info()
-    print(f"\n🔧 量子電路架構:")
+    print(f"\n🔧 Quantum Circuit Architecture:")
     for key, value in circuit_info.items():
         print(f"   🔹 {key}: {value}")
     
     # 量子訓練
-    print(f"\n🚀 開始量子機器學習訓練...")
+    print(f"\n🚀 Starting quantum machine learning training...")
     quantum_svm.fit(X_train, y_train)
     
-    # 量子預測
-    print(f"\n🔮 執行量子預測...")
+    # Quantum prediction
+    print(f"\n🔮 Executing quantum prediction...")
     y_pred = quantum_svm.predict(X_test)
     
     # 計算準確率
@@ -363,19 +362,19 @@ def main():
     
     # 結果報告
     print(f"\n" + "=" * 60)
-    print("📊 量子機器學習結果報告")
+    print("📊 Quantum Machine Learning Results Report")
     print("=" * 60)
-    print(f"⚛️  量子SVM準確率: {accuracy:.4f} ({accuracy*100:.2f}%)")
-    print(f"🎯 量子比特使用: {circuit_info['total_qubits']} qubits")
-    print(f"🔄 量子測量次數: {circuit_info['shots']} shots")
-    print(f"📏 電路總深度: {circuit_info['feature_map_depth'] + circuit_info['ansatz_depth']}")
+    print(f"⚛️  Quantum SVM Accuracy: {accuracy:.4f} ({accuracy*100:.2f}%)")
+    print(f"🎯 Qubits used: {circuit_info['total_qubits']} qubits")
+    print(f"🔄 Quantum measurements: {circuit_info['shots']} shots")
+    print(f"📏 Total circuit depth: {circuit_info['feature_map_depth'] + circuit_info['ansatz_depth']}")
     
     # 詳細分類報告
-    print(f"\n📋 量子分類詳細報告:")
+    print(f"\n📋 Detailed Quantum Classification Report:")
     print(classification_report(y_test, y_pred))
     
     # 量子視覺化
-    print(f"\n📊 生成量子結果視覺化...")
+    print(f"\n📊 Generating quantum results visualization...")
     quantum_visualization(df, y_test, y_pred, accuracy, circuit_info)
     
     # 保存量子結果
@@ -386,20 +385,20 @@ def main():
     })
     
     quantum_results.to_csv('quantum_results_fixed.csv', index=False)
-    print(f"💾 量子結果已保存至 quantum_results_fixed.csv")
+    print(f"💾 Quantum results saved to quantum_results_fixed.csv")
     
     # 量子優勢總結
     print(f"\n" + "=" * 60)
-    print("🚀 量子計算優勢總結")
+    print("🚀 Quantum Computing Advantage Summary")
     print("=" * 60)
-    print("✅ 使用真正的量子特徵映射")
-    print("✅ 利用量子糾纏增強特徵表示")
-    print("✅ 量子平行計算加速訓練")
-    print("✅ 高維希爾伯特空間分類")
-    print("✅ 量子干涉優化決策邊界")
+    print("✅ Using true quantum feature mapping")
+    print("✅ Using quantum entanglement to enhance feature representation")
+    print("✅ Quantum parallel computing accelerates training")
+    print("✅ High-dimensional Hilbert space classification")
+    print("✅ Quantum interference optimizes decision boundaries")
     
-    print(f"\n⚛️  量子機器學習專案執行完成！")
-    print(f"🎉 成功實現純量子SVM藥物分類")
+    print(f"\n⚛️  Quantum machine learning project execution completed!")
+    print(f"🎉 Successfully implemented pure quantum SVM drug classification")
 
 if __name__ == "__main__":
     main()
