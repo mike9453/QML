@@ -34,11 +34,16 @@ X_test = pd.get_dummies(X_test)
 
 print(X_train.head())
 
+# Convert boolean columns to int for SMOTE compatibility
+X_train = X_train.astype(int)
+X_test = X_test.astype(int)
+
 #SMOTE Technique
 from imblearn.over_sampling import SMOTE
-X_train, y_train = SMOTE().fit_resample(X_train, y_train)
+X_train, y_train = SMOTE(random_state=42).fit_resample(X_train, y_train)
 sns.set_theme(style="darkgrid")
-sns.countplot(y=y_train, data=df_drug, palette="mako_r")
+sns.countplot(y=y_train, hue=y_train, data=df_drug, palette="mako_r", legend=False)
 plt.ylabel('Drug Type')
 plt.xlabel('Total')
-plt.show()
+plt.savefig('drug_distribution.png', dpi=150, bbox_inches='tight')
+plt.close()
