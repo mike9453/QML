@@ -1,0 +1,70 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+.ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+.cache
+pytest_cache/
+nosetests.xml
+test-results/
+
+# mypy
+.mypy_cache/
+
+# Pyre type checker
+.pyre/
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables / secrets
+.env
+.env.*
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# Jupyter runtime
+~$*
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VSCode history & state
+.history/

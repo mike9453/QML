@@ -1,0 +1,19 @@
+# 基本資料科學套件
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+seaborn>=0.11.0
+scikit-learn>=1.0.0
+
+# 最新版量子計算套件 (2024)
+qiskit>=1.0.0
+qiskit-aer>=0.14.0
+qiskit-machine-learning>=0.8.0
+qiskit-algorithms>=0.3.0
+
+# 額外的機器學習套件
+imbalanced-learn>=0.8.0
+
+# Jupyter notebook (如果需要)
+jupyter>=1.0.0
+ipykernel>=6.0.0
