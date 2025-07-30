@@ -35,4 +35,10 @@ X_test = pd.get_dummies(X_test)
 print(X_train.head())
 
 #SMOTE Technique
-
+from imblearn.over_sampling import SMOTE
+X_train, y_train = SMOTE().fit_resample(X_train, y_train)
+sns.set_theme(style="darkgrid")
+sns.countplot(y=y_train, data=df_drug, palette="mako_r")
+plt.ylabel('Drug Type')
+plt.xlabel('Total')
+plt.show()
