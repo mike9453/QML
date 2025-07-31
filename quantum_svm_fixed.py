@@ -83,7 +83,7 @@ class TrueQuantumSVM:
         """設置量子核函數"""
         print("🧮 Building quantum kernel functions...")
         
-        # 使用 AerSimulator 進行量子模擬
+        # 使用 AerSimulator 進行量子模擬 (量子模擬器)
         self.quantum_instance = AerSimulator(shots=self.shots)
         
         # 創建量子核 - 使用保真度量子核
