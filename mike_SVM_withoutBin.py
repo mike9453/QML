@@ -12,7 +12,6 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from imblearn.over_sampling import SMOTE
 
 from sklearn.svm import SVC
-from quantum_svm_fixed import TrueQuantumSVM
 
 
 # ========== Step 1: 載入資料 ========== #

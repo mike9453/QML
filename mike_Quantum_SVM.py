@@ -18,7 +18,7 @@ from qiskit_algorithms.optimizers import COBYLA # COBYLA 是一種無約束的�
 from qiskit_machine_learning.algorithms import VQC # Variational Quantum Classifier (VQC) 是一種使用變分量子電路進行分類的演算法
 from qiskit_machine_learning.kernels import FidelityQuantumKernel #量子核函數（quantum kernel）用於量子機器學習中的核方法，能夠計算量子態之間的相似度或距離
 from qiskit_machine_learning.algorithms import QSVC #量子支持向量機（Quantum Support Vector Classifier, QSVC）是一種基於量子核函數的支持向量機分類器
-from qiskit_machine_learning.state_fidelities import ComputeUncompute #量子態保真度計算
+# ComputeUncompute not available in this version
 
 def load_and_prepare_quantum_data():
     """載入並準備量子資料（包含 Na_to_K 特徵）"""
@@ -90,8 +90,7 @@ class QuantumSVM:
         self.feature_map = ZZFeatureMap(
             feature_dimension=effective_dim,
             reps=2,  # 學術標準：2層
-            entanglement='linear',  # 學術標準：線性糾纏
-            data_map_func=lambda x: x  # 線性映射
+            entanglement='linear'  # 學術標準：線性糾纏
         )
         
         circuit_depth = self.feature_map.depth()
@@ -189,8 +188,7 @@ class QuantumSVM:
             
             # 創建量子核 - 使用保真度量子核
         self.quantum_kernel = FidelityQuantumKernel(
-            feature_map=self.feature_map,
-            fidelity=ComputeUncompute(sampler=sampler)
+            feature_map=self.feature_map
         )
         print("   ✅ 保真度量子核建立完成")
     
