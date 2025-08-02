@@ -22,6 +22,10 @@ from qiskit_machine_learning.algorithms import QSVC #量子支持向量機（Qua
 
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import StandardScaler
+#from qiskit_ibm_runtime import Fidelity
+
+from qiskit_machine_learning.state_fidelities import ComputeUncompute
+
 
 def load_prepare_smote_scaled_data():
     print("📁 載入藥物分類資料集...")
@@ -65,6 +69,7 @@ from qiskit.circuit.library import ZZFeatureMap
 
 # 假設你的資料有 5 維特徵
 feature_map = ZZFeatureMap(feature_dimension=5, reps=2, entanglement='linear')
+feature_map.decompose().draw(output="mpl", fold=20)
 
 #QSVM train
 
@@ -123,19 +128,19 @@ service = QiskitRuntimeService(
 # ✅ 指定實體量子後端
 backend = service.least_busy(simulator=False, operational=True)
 print(f"✅ 可用最空閒的後端為：{backend.name}")
-
-# ✅ 傳入實體後端給 RuntimeSampler (使用新版API)
+# 3️⃣ 使用這個後端來建立 Sampler（新版的量子原語執行方式）
 sampler_real = RuntimeSampler(mode=backend)
+
+# 4️⃣ 建立 ComputeUncompute fidelity 方法（本質上是個 fidelity primitive）
+fidelity = ComputeUncompute(sampler=sampler_real)
 
 #  - qiskit.primitives.Sampler - 只能用於本地模擬器
 #  - qiskit_ibm_runtime.Sampler - 可以連接到 IBM 真實量子硬體
-
 # ✅ 正確建立 FidelityQuantumKernel（使用 sampler 參數）
 quantum_kernel_real = FidelityQuantumKernel(
     feature_map=feature_map,
-    fidelity=sampler_real
-)
 
+)
 qsvc_real = QSVC(quantum_kernel=quantum_kernel_real)
 
 # 訓練 QSVC
