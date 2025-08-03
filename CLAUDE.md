@@ -35,8 +35,11 @@ This is a Quantum Machine Learning (QML) research project focused on drug classi
 - **`reference/true_quantum_svm.py`**: Alternative quantum SVM implementation
 
 ### 2. Traditional SVM Comparisons
-- **`mike_SVM_withoutBin.py`**: Basic traditional SVM for performance comparison
+- **`mike_SVM_withoutBin.py`**: Enhanced SVM with 10 ML methods comparison (includes English visualization)
+- **`mike_SVM_withoutBin_annotated.py`**: Fully annotated version with detailed code comments (recommended for learning)
 - **`reference/mike_SVM_withBin.py`**: Traditional SVM with data binning preprocessing
+- **`ml_comparison_english.py`**: Comprehensive ML methods comparison with English labels
+- **`quick_english_ml.py`**: Quick 4-method comparison with English visualization
 
 ### 3. Core Quantum Architecture
 
@@ -77,11 +80,20 @@ python mike_Quantum_SVM.py
 
 # 4-dimensional quantum SVM with comprehensive visualization
 python reference/quantum_svm_fixed.py
+```
 
-# Traditional SVM comparison
+### Running Traditional ML Comparisons
+```bash
+# Enhanced SVM with 10 ML methods comparison (English charts)
 python mike_SVM_withoutBin.py
 
-# Traditional SVM with preprocessing
+# Comprehensive ML methods comparison (8 methods, English labels)
+python ml_comparison_english.py
+
+# Quick 4-method comparison (fast execution, English charts)
+python quick_english_ml.py
+
+# Traditional SVM with data binning
 python reference/mike_SVM_withBin.py
 ```
 
@@ -120,6 +132,9 @@ python reference/mike_SVM_withBin.py
 - **`quantum_results_fixed.csv`**: Detailed prediction results with correctness flags
 - **`quantum_svm_results_fixed.png`**: 6-panel comprehensive quantum analysis
 - **`drug_distribution.png`**: Class distribution visualization (when SMOTE used)
+- **`ml_methods_comparison_english.png`**: Comprehensive ML methods comparison (English labels)
+- **`quick_ml_comparison_english.png`**: Quick 4-method comparison visualization
+- **`simple_ml_comparison_english.png`**: Simple 2-method accuracy comparison
 
 ### Visualization Components
 1. Quantum circuit architecture parameters
@@ -157,18 +172,22 @@ python reference/mike_SVM_withBin.py
 ## File Structure
 ```
 QML/
-├── drug200.csv                    # Primary dataset
-├── requirements.txt               # Complete dependency list
-├── mike_Quantum_SVM.py           # Main 5D quantum SVM implementation  
-├── mike_SVM_withoutBin.py        # Traditional SVM comparison
-├── reference/                     # Additional implementations and outputs
-│   ├── quantum_svm_fixed.py     # 4D quantum SVM with TrueQuantumSVM
-│   ├── mike_SVM_withBin.py      # Traditional SVM with preprocessing
-│   ├── true_quantum_svm.py      # Alternative quantum implementation
-│   ├── *.png                    # Generated visualizations
-│   ├── *.csv                    # Results and analysis files
-│   └── *.ipynb                  # Jupyter research notebooks
-├── test.py                       # Testing utilities
-├── mike.py                       # Additional utilities
-└── venv/                         # Python virtual environment
+├── drug200.csv                           # Primary dataset
+├── requirements.txt                      # Complete dependency list
+├── mike_Quantum_SVM.py                  # Main 5D quantum SVM implementation  
+├── mike_SVM_withoutBin.py               # Enhanced SVM with 10 methods comparison
+├── mike_SVM_withoutBin_annotated.py     # Fully annotated version (learning guide)
+├── ml_comparison_english.py             # Comprehensive ML comparison (English)
+├── quick_english_ml.py                  # Quick 4-method comparison
+├── CODE_STRUCTURE_GUIDE.md              # Detailed code explanation guide
+├── reference/                            # Additional implementations and outputs
+│   ├── quantum_svm_fixed.py            # 4D quantum SVM with TrueQuantumSVM
+│   ├── mike_SVM_withBin.py             # Traditional SVM with preprocessing
+│   ├── true_quantum_svm.py             # Alternative quantum implementation
+│   ├── *.png                           # Generated visualizations
+│   ├── *.csv                           # Results and analysis files
+│   └── *.ipynb                         # Jupyter research notebooks
+├── test.py                              # Testing utilities
+├── mike.py                              # Additional utilities
+└── venv/                                # Python virtual environment
 ```

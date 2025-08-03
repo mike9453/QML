@@ -25,6 +25,7 @@ from sklearn.preprocessing import StandardScaler
 #from qiskit_ibm_runtime import Fidelity
 
 from qiskit_machine_learning.state_fidelities import ComputeUncompute
+from qiskit import transpile
 
 
 def load_prepare_smote_scaled_data():
@@ -68,7 +69,7 @@ def load_prepare_smote_scaled_data():
 from qiskit.circuit.library import ZZFeatureMap
 
 # 假設你的資料有 5 維特徵
-feature_map = ZZFeatureMap(feature_dimension=5, reps=2, entanglement='linear')
+feature_map = ZZFeatureMap(feature_dimension=5, reps=2, entanglement='linear',parameter_prefix='a')
 feature_map.decompose().draw(output="mpl", fold=20)
 
 #QSVM train
@@ -131,15 +132,32 @@ print(f"✅ 可用最空閒的後端為：{backend.name}")
 # 3️⃣ 使用這個後端來建立 Sampler（新版的量子原語執行方式）
 sampler_real = RuntimeSampler(mode=backend)
 
+from qiskit_machine_learning.state_fidelities import ComputeUncompute
+from qiskit import transpile
+
+class TranspiledComputeUncompute(ComputeUncompute):
+    def _construct_circuits(self, circuits_1, circuits_2):
+        circuits = super()._construct_circuits(circuits_1, circuits_2)
+        # 針對 ComputeUncompute 自動產生的電路再次做 transpile（重要！）
+        transpiled_circuits = [
+            transpile(circ, backend=self._sampler._backend, basis_gates=self._sampler._backend.configuration().basis_gates)
+            for circ in circuits
+        ]
+        return transpiled_circuits
+
 # 4️⃣ 建立 ComputeUncompute fidelity 方法（本質上是個 fidelity primitive）
-fidelity = ComputeUncompute(sampler=sampler_real)
+#fidelity = ComputeUncompute(sampler=sampler_real)
+fidelity = TranspiledComputeUncompute(sampler=sampler_real)
+
+feature_map_transpiled = transpile(feature_map, backend=backend, optimization_level=3,basis_gates=backend.configuration().basis_gates)
+
 
 #  - qiskit.primitives.Sampler - 只能用於本地模擬器
 #  - qiskit_ibm_runtime.Sampler - 可以連接到 IBM 真實量子硬體
 # ✅ 正確建立 FidelityQuantumKernel（使用 sampler 參數）
 quantum_kernel_real = FidelityQuantumKernel(
-    feature_map=feature_map,
-
+    feature_map=feature_map_transpiled,
+    fidelity=fidelity,
 )
 qsvc_real = QSVC(quantum_kernel=quantum_kernel_real)
 
@@ -190,3 +208,4 @@ print("\n[模擬器] 混淆矩陣：")
 print(confusion_matrix(y_test, y_pred_sm))
 print("\n[真實量子電腦] 混淆矩陣：")
 print(confusion_matrix(y_test, y_pred))
+
